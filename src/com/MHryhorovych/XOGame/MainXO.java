@@ -1,7 +1,9 @@
 package com.MHryhorovych.XOGame;
 
+import javax.swing.*;
 import java.util.Random;
 import java.util.Scanner;
+
 /**
  * @autor Maksym Hryhorovych
  */
@@ -34,24 +36,23 @@ public class MainXO {
                 System.out.println("Ничья");
                 break;
             }
-            movePlayer1();
-            System.out.println();
-            fillField();
-            if (checkWinner(Player1)) {
-                System.out.println("Победа второго игрока");
-                break;
-            }
-//            moveComputer();
+//            movePlayer1();
 //            System.out.println();
+//            fillField();
+//            if (checkWinner(Player1)) {
+//                System.out.println("Победа второго игрока");
+//                break;
+//            }
+            moveComputer();
             fillField();
-            if (checkWinner(Player1)) {
+            if (checkWinner(Computer)) {
                 System.out.println("Победа компьютера");
                 break;
             }
-//            if (isItFreeSpace()) {
-//                System.out.println("Ничья");
-//                break;
-//            }
+            if (isItFreeSpace()) {
+                System.out.println("Ничья");
+                break;
+            }
         }
     }
 
@@ -75,7 +76,7 @@ public class MainXO {
     }
 
     static void Symbol(int x, int y, char Symbol) {
-        field[x][y] = Symbol;
+        field[y][x] = Symbol;
     }
 
     static void movePlayer() {
@@ -92,60 +93,75 @@ public class MainXO {
         int x, y;
         do {
             System.out.println("Введите координаты: ");
-            x = sc.nextInt() ;
-            y = sc.nextInt() ;
+            x = sc.nextInt();
+            y = sc.nextInt();
         } while (!isItFree(x, y));
         field[y][x] = Player1;
     }
 
     static void moveComputer() {
         int x, y;
-        do {
-            System.out.println("Введите координаты: ");
-            x = random.nextInt(Size_X);
-            y = random.nextInt(Size_Y);
-        } while (!isItFree(x, y));
-        field[y][x] = Computer;
-    }
+            do {
+                System.out.println("Введите координаты: ");
+                x = random.nextInt(Size_X);
+                y = random.nextInt(Size_Y);
+                System.out.println("X: " + x + " Y: " + y );
+            }while (!isItFree(x, y)) ;
 
-    static boolean isItFree(int x, int y) {
-        if (x < 0 || x >= Size_X || y < 0 || y >= Size_Y) return false;
-        if (field[x][y] == Empty) return true;
-        return false;
-    }
-
-    static boolean isItFreeSpace() {
-        for (int i = 0; i <= Size_Y; i++) {
-            for (int k = 0; k <= Size_X; i++) {
-                if (field[i][k] == Empty) return false;
+                field[y][x] = Computer;
+                System.out.println("Computer select x: " + x + " y: " + y);
             }
-        }
-        return true;
-    }
 
-    static boolean checkWinner(char Symbol) {
-        for (int i = 0; i < Size_Y; i++) {
-            int result = 0;
-            for (int k = 0; k < Size_X; k++) {
-                if (field[i][k] == Symbol) result++;
+
+        static boolean isItFree ( int x, int y){
+            if (x < 0 || x >= Size_X || y < 0 || y >= Size_Y) return false;
+            if (field[y][x] == Empty) return true;
+            if (field[y][x] == Player) return false;
+            if (field[y][x] == Computer) return false;
+            return false;
+        }
+
+        static boolean isItFreeSpace () {
+            for (int i = 0; i < Size_Y; i++) {
+                for (int k = 0; k < Size_X; k++) {
+                    if (field[i][k] == Empty) return false;
+                }
             }
-            if (result == forWin) return true;
+            return true;
         }
 
-        int leftDiagonal = 0;
-        for (int i = 0; i < Size_Y; i++) {
-            for (int k = 0; k < Size_X; k++) {
-                if (k == i && field[i][k] == Symbol) leftDiagonal++;
+        static boolean checkWinner (char Symbol){
+        //for rows
+            for (int i = 0; i < Size_Y; i++) {
+                int result = 0;
+                for (int k = 0; k < Size_X; k++) {
+                    if (field[i][k] == Symbol) result++;
+                }
+                if (result == forWin) return true;
             }
-        }
-        if (leftDiagonal == forWin) return true;
+        //for columns
+            for (int i = 0; i < Size_Y; i++) {
+                int result = 0;
+                for (int k = 0; k < Size_X; k++) {
+                    if (field[k][i] == Symbol) result++;
+                }
+                if (result == forWin) return true;
+            }
 
-        int rightDiagonal = 0;
-        for (int i = 0, k = Size_Y - 1; i < Size_X && k >= 0; i++, k--) {
-            if (field[i][k] == Symbol) rightDiagonal++;
+            int leftDiagonal = 0;
+            for (int i = 0; i < Size_Y; i++) {
+                for (int k = 0; k < Size_X; k++) {
+                    if (k == i && field[i][k] == Symbol) leftDiagonal++;
+                }
+            }
+            if (leftDiagonal == forWin) return true;
+
+            int rightDiagonal = 0;
+            for (int i = 0, k = Size_Y - 1; i < Size_X && k >= 0; i++, k--) {
+                if (field[i][k] == Symbol) rightDiagonal++;
+            }
+            if (rightDiagonal == forWin) return true;
+            return false;
         }
-        if (rightDiagonal == forWin) return true;
-        return false;
     }
-}
 

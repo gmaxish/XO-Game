@@ -1,6 +1,5 @@
 package com.MHryhorovych.XOGame;
 
-import javax.swing.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -10,14 +9,14 @@ import java.util.Scanner;
 
 public class MainXO {
 
-    static int Size_X = 3;
-    static int Size_Y = 3;
+    static Scanner playersChoise = new Scanner(System.in);
+    static int Size_X = choice();
+    static int Size_Y = Size_X;
     static char Player = 'X';
     static char Player1 = '0';
     static char Computer = '0';
     static char Empty = '-';
     static char[][] field = new char[Size_Y][Size_X];
-    static Scanner sc = new Scanner(System.in);
     static int forWin = 3;
     static Random random = new Random();
 
@@ -83,8 +82,8 @@ public class MainXO {
         int x, y;
         do {
             System.out.println("Введите координаты Игрок 1: (стоблец, строка)");
-            x = sc.nextInt() - 1;
-            y = sc.nextInt() - 1;
+            x = playersChoise.nextInt() - 1;
+            y = playersChoise.nextInt() - 1;
         } while (!isItFree(x, y));
         field[y][x] = Player;
     }
@@ -93,8 +92,8 @@ public class MainXO {
         int x, y;
         do {
             System.out.println("Введите координаты: ");
-            x = sc.nextInt();
-            y = sc.nextInt();
+            x = playersChoise.nextInt();
+            y = playersChoise.nextInt();
         } while (!isItFree(x, y));
         field[y][x] = Player1;
     }
@@ -128,6 +127,14 @@ public class MainXO {
                 }
             }
             return true;
+        }
+
+        static int choice(){
+            System.out.println("Выберите размер игрового поля: ");
+            int x = playersChoise.nextInt();
+            Size_X = x;
+            Size_Y = x;
+            return Size_X;
         }
 
         static boolean checkWinner (char Symbol){
